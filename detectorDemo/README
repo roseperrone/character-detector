@@ -1,0 +1,74 @@
+Code in the detectorDemo/ directory is mainly written by David J. Wu
+(http://www.stanford.edu/~dwu4/)
+
+== Quick Start Demo ==
+
+To run a simple demo using the provided model, use the provided script
+
+  runDetectorDemo([outputDir])
+
+If the optional parameter outputDir is specified, the demo will save
+the results to the specified directory. Sample outputs from the
+detector for the provided image is provided in the sampleOutput folder.
+
+== Setting up and Using the Detector ==
+
+We assume that you have successfully trained a CNN for the text/non-text 
+classification problem. This section describes how to use the trained 
+CNN model to perform text detection over full images. 
+
+1. First, we need to create a "filter stack" so that we can run full 
+image convolutions. The provided cstackToFilterStack script takes in a 
+CNN and outputs this filter stack structure: 
+
+  cstackToFilterStack(params, netconfig, centroids, P, M, svmInputDim)
+  
+The params and netconfig are the CNN parameters and architecture. The 
+centroids, P, M are the first layer filters and whitening parameters. 
+The svmInputDim specifies the dimension of the fully connected layer at 
+the top (the input to the SVM classifier). 
+
+2. To compute the responses for a given image, use the following script: 
+
+  computeResponses(img, filterStack, [scales, usegpu])
+  
+The first two parameters (sample image) and filterStack (from step 1) 
+are required. The other two are optional. By default, the operation is 
+done on the CPU and using 13 scales (1.5, 1.2, 1.1, ... , 0.1). 
+
+3. To obtain a set of line-level bounding boxes for an image, use the 
+following script: 
+
+
+  findBoxesFull(responses, [scales])
+
+Here, responses is the set of response maps from step 2. The scales are 
+the scales of each entry in the responses (defaults to the same one as 
+above). 
+
+4. To visualize the boxes, use the script
+
+  visualizeBoxes(img, response, [thresh])
+  
+Here, img is the original image, response is the boxes computed in step 
+3, and thresh is a threshold on the boxes (defaults to 1.5).
+
+== Training the Detector ==
+
+To train a detector, first run the included K-means code to obtain a
+set of centroids (with associated whitening parameters) for the first
+layer features. Then, run the script
+
+  trainDetectorCNN(trainData, cvData, centroids, P, M, [maxIter], [lambda])
+
+The first two parameters are the names of the files where the training
+and cross validation data are. Some sample datafiles are included in
+the datafiles directory. The centroids, P, M parameters are from the
+parameters for the first layer of features. Two optional parameters
+are the maximum number of iterations to run the fine tuning and the
+L2 regularization parameter (lambda).
+
+Once the model has been trained, it will be saved to the models
+directory. The default output filename is 'detector_cnn.mat.' Note
+that training the CNN with a large training set can take a very long time.
+

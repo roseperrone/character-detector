@@ -1,0 +1,140 @@
+This is a demo package of the code we used for our paper, "End-to-End
+Text Recognition with Convolutional Neural Networks", T. Wang, D. Wu,
+A. Coates, A. Ng, in ICPR 2012.
+
+Feel free to contact me if you have any questions.
+
+My email address: twangcat@stanford.edu
+My website: http://cs.stanford.edu/people/twangcat/
+
+The package is provided to facilitate understanding of the algorithms
+used in our paper. It contains demos to all the major components of our
+end-to-end system. Because of speed considerations, the CNN 
+architectures as well as dataset sizes provided in this package are
+much smaller than the actural ones used in the paper, although the
+algorithms themselves are identical. We also provide our trained models
+together with code to reproduce major results reported in our paper.
+
+Below are instructions about running the demo for each component, as 
+well as the end-to-end system. All code run under Matlab.
+
+=======================================================================
+1. Unsupervised Feature Learning using K-Means
+=======================================================================
+Download the toy cropped character datasets from:
+http://cs.stanford.edu/people/twangcat/ICPR2012_code/charDatasets.tar
+and extract the 'dataset' folder under SceneTextCNN_demo/
+>> cd kmeans/
+>> kmeansDemo;
+
+This will crop a set of random 8x8 patches, and train a set of first
+layer filters using K-Means. Filters with small variances are removed.
+The final resulting filters can be visualized with display_network() as
+shown in the script.
+
+=======================================================================
+2. Training a toy character detector module
+=======================================================================
+go to the top level directory of SceneTextCNN_demo, then do:
+
+>> cd trainDetector
+>> train_detector;
+
+This will train a character detector starting from raw data. The
+pipeline is: 
+1. learn 1st layer filters using K-Means from raw data
+2. Extract first layer feature responses from raw data
+3. Train detector using backpropagation.
+We get the following training and validation results on the toy dataset
+train accuracy = 0.974667, validation accuracy = 0.965867
+Do note that training a 2-layer CNN is not a convex problem, so you
+may get slightly different numbers.
+
+=======================================================================
+3. Training a toy character classifier module
+=======================================================================
+go to the top level directory of SceneTextCNN_demo, then do:
+>> cd trainClassifier
+>> train_classifier;
+
+This will train a character classifier starting from raw data. The
+pipeline is: 
+1. learn 1st layer filters using K-Means from raw data
+2. Extract first layer feature responses from raw data
+3. Train detector using backpropagation.
+
+We get the following training and validation results on the toy dataset
+train accuracy = 1.0000, validation accuracy = 0.7699
+You may get slightly different numbers due to different random initial
+point
+
+=======================================================================
+4. Detecting and visualize horizontal text lines on a sample image
+=======================================================================
+go to the top level directory of SceneTextCNN_demo, then do:
+>> cd detectorDemo
+>> runDetectorDemo;
+This might take quite long, mainly due to the multilayer sliding window
+process. Eventually the image should be marked with line-level bounding
+boxes with candidate space locations.
+
+=======================================================================
+5. Producing and visualizing end-to-end results on a sample image
+=======================================================================
+Download the full ICDAR Test dataset from:
+http://algoval.essex.ac.uk/icdar/datasets/TrialTest/scene.zip
+and extract the SceneTrailTest folder under SceneTextCNN_demo/
+
+
+go to the top level directory of SceneTextCNN_demo, then do:
+>> e2e_visualize;
+This might take quite long, mainly due to the multilayer sliding window
+process. Eventually the image should be marked with word bounding
+boxes, and their labels and positions will be printed in Matlab
+
+
+=======================================================================
+6. Reproducing cropped word recognition results
+=======================================================================
+a. For the ICDAR-WD-FULL benchmark:
+Download the test set of ICDAR 2003 Robust Word Recognition Dataset
+from: http://algoval.essex.ac.uk/icdar/datasets/TrialTest/word.zip
+Extract the 'word' folder under the top level directory of 
+SceneTextCNN_demo, then do:
+>> wordRecog;
+
+b. For the ICDAR-WD-50 benchmark:
+We have included the lexicons used by Kai Wang in his SVT dataset paper
+under: icdarTestLex/
+Simply change the 'lextype' variable in wordRecog.m to '50', then do:
+>> wordRecog;
+
+c. For the SVT word recognition benchmark:
+Download the SVT Dataset from:
+http://vision.ucsd.edu/~kai/svt/svt.zip and extract the folder svt1 
+under the top level directory of SceneTextCNN_demo. Change the 
+'benchMark' variable in wordRecog.m to 'svt', then do:
+>> wordRecog;
+
+=======================================================================
+7. Reproducing full end-to-end resutls
+=======================================================================
+Download and extract the ICDAR and SVT dataset as described in steps 5
+and 6
+
+Download the precomputed line-level bounding boxes from:
+http://cs.stanford.edu/people/twangcat/ICPR2012_code/lineBboxes.tar
+and extract the precomputedLineBboxes folder under SceneTextCNN_demo/
+It contains the line-level bounding box information extracted using
+our best detector model. Computing them from scratch takes a long time,
+so we have provided them for you. You can also use the 
+detectorDemo/runDetectorFull.m script to regenerate them on your own.
+Just remember to create an empty precomputedLineBboxes/ directory.
+
+run command:
+>> e2e_demo;
+It generates end-to-end ICDAR-FULL and SVT results reported in our
+paper. To use different lexicon sizes for ICDAR, change the 'lextype'
+variable in e2e_demo.m accordingly.
+
+
