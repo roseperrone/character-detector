@@ -1,4 +1,8 @@
+*~
+*.mat
 models/
 structs/
 SceneTrialTest/
 icdarTestLex/
+dataset/
+lens/data/
