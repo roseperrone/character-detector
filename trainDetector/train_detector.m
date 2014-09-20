@@ -1,5 +1,5 @@
 %% train first layer filters with kmeans
-%if ~exist('../kmeans/first_layer_centroids_detector_48.mat', 'file')
+if ~exist('../kmeans/first_layer_centroids_detector_48.mat', 'file')
     
     addpath(genpath('../kmeans/'));
     % set up constants
@@ -34,9 +34,9 @@
     %Uses dot-product Kmeans to learn a specified number of bases.
     D = run_projection_kmeans(patches,n_filters,n_iter);
     save('../kmeans/first_layer_centroids_detector_48.mat','D','M','P', '-v7.3');
-%else
-%    load ../kmeans/first_layer_centroids_detector_48.mat;
-%end
+else
+    load ../kmeans/first_layer_centroids_detector_48.mat;
+end
 
 %trainDataFile='../dataset/detectorTrain.mat';
 %cvDataFile='../dataset/detectorCV.mat';

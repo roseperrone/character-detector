@@ -3,9 +3,6 @@
 PATCH_SIZE = 32;
 TRAIN_PERCENTAGE = 0.2;
 
-%              'dst', {'data/train_char_patches.mat', ...
-%                      'data/test_char_patches.mat'});
-
 all_positive_files = dir('data/positive-chars-sep-19');
 all_negative_files = dir('data/negative-chars-sep-19');
 
@@ -26,8 +23,8 @@ end
 [positive_train_idx, positive_test_idx] = crossvalind('HoldOut', size(positive_files, 2), TRAIN_PERCENTAGE);
 [negative_train_idx, negative_test_idx] = crossvalind('HoldOut', size(negative_files, 2), TRAIN_PERCENTAGE);
 
-train_classes = [ones(sum(positive_train_idx), 1); zeros(sum(negative_train_idx), 1)];
-test_classes = [ones(sum(positive_test_idx), 1); zeros(sum(negative_test_idx), 1)];
+train_classes = [ones(sum(positive_train_idx), 1); 2*ones(sum(negative_train_idx), 1)];
+test_classes = [ones(sum(positive_test_idx), 1); 2*ones(sum(negative_test_idx), 1)];
 
 % Make the train struct
 positive_train_mat = filenames_to_mat('data/positive-chars-sep-19', positive_files(positive_train_idx));
