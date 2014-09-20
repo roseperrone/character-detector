@@ -12,7 +12,8 @@ f = fopen('data/predicted_chars.csv', 'a+');
 count = 0;
 
 for i = 1:size(filenames, 2)
-    for prediction = detect_chars(strcat(SRC, filenames(i)))
+    filename = filenames(i);
+    for prediction = detect_chars(strcat(SRC, filename{1}))
         count = count + 1;
         fprintf(f, '%s,%d,%d,%d\n', prediction.filename, prediction.x, ...
             prediction.y, prediction.scale);

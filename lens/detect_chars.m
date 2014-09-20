@@ -16,8 +16,33 @@ function predictions = detect_char( filename )
 %
 % So roughly 6.4k windows are computed. Let's see if this is too slow...
 
-scales = [1024, 512, 256, 128, 64];
+img = rgb2gray(imread(filename));
+img_sizes = [64, 512, 256, 128, 64];
 step_sizes = [16, 16, 8, 8, 8];
+
+w = 32; % the window size
+
+for i=1:size(img_sizes, 2)
+    t = img_sizes(i);
+    s = step_sizes(i);
+    img = imresize(img, [t t]);
+    for i=1:((t-w)/s + 1)
+        for j=1:((t-w)/s + 1)
+            x = 1 + (i-1)*s;
+            y = 1 + (j-1)*s;
+            disp(strcat(num2str(x), ', ', num2str(x+w-1), ', ', ...
+                        num2str(y), ', ', num2str(y+w-1)))
+            patch_mat = img(x:(x+w-1), y:(y+w-1));
+            patch = mat2gray(patch_mat, [0 255]);
+            imshow(patch)
+            disp('mmhmmmm')
+            
+            % TODO filter the image if it has > 80% pixels that
+            % are less than 15.
+            
+        end
+    end
+end
 
 predictions = [];
 
