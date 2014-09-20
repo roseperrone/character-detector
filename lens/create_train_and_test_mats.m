@@ -1,7 +1,7 @@
 %% Loads the jpgs into a struct of matrices that the detector demo uses.
 
 PATCH_SIZE = 32;
-TRAIN_PERCENTAGE = 0.2;
+TEST_PERCENTAGE = 0.2;
 
 all_positive_files = dir('data/positive-chars-sep-19');
 all_negative_files = dir('data/negative-chars-sep-19');
@@ -20,9 +20,11 @@ for i=1:size(negative_files_struct, 1)
     negative_files(i) = {negative_files_struct(i).name};
 end
 
-[positive_train_idx, positive_test_idx] = crossvalind('HoldOut', size(positive_files, 2), TRAIN_PERCENTAGE);
-[negative_train_idx, negative_test_idx] = crossvalind('HoldOut', size(negative_files, 2), TRAIN_PERCENTAGE);
+[positive_train_idx, positive_test_idx] = crossvalind('HoldOut', size(positive_files, 2), TEST_PERCENTAGE);
+[negative_train_idx, negative_test_idx] = crossvalind('HoldOut', size(negative_files, 2), TEST_PERCENTAGE);
 
+% label=1 is positive
+% label=2 is negative
 train_classes = [ones(sum(positive_train_idx), 1); 2*ones(sum(negative_train_idx), 1)];
 test_classes = [ones(sum(positive_test_idx), 1); 2*ones(sum(negative_test_idx), 1)];
 
