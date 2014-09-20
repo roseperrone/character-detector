@@ -20,6 +20,7 @@ else
     cvDataFile='../lens/data/test_char_patches.mat';
 end
 
+
 if USE_EXISTING_CLUSTERS == 1 & ~exist('../kmeans/first_layer_centroids_detector_48.mat', 'file')
     addpath(genpath('../kmeans/'));
     % set up constants

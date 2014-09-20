@@ -1,3 +1,26 @@
+Lens-specific notes:
+  The code you need to run the character detector is in `./lens/` and
+  `./trainDetector/train_detector.m`
+
+  To train and test the character detector on pill images, you first
+  need to generate the train and test data. Here's how:
+  1. Use draw_imprints.py to draw the bounding boxes of each character
+  2. Use crop_positive_chars.py and crop_negative_chars.py to generate
+     the 32x32px grayscale patches.
+  3. Copy the directories containing the positive and negaive char
+     patches to `./lens/data`. Update the POSITIVE_CHAR_PATCHES_DIR
+     and NEGATIVE_CHAR_PATCHES_DIR flags wherever they exist in
+     `./lens`.
+  4. Run create_positive_char_mats.m and create_train_and_test_mats.m.
+  5. In `./trainDetector/train_detecor.m`, set USE_EXISTING_CLUSTERS
+     to 0 and set USE_LENS_DATA to 1. Make sure the filenames defined
+     at the top of this file are correct. Then run this script. A
+     report of train and test accuracy will be printed.
+
+
+---------------------------------------------------------------------
+
+
 This is a demo package of the code we used for our paper, "End-to-End
 Text Recognition with Convolutional Neural Networks", T. Wang, D. Wu,
 A. Coates, A. Ng, in ICPR 2012.
