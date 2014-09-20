@@ -9,9 +9,9 @@ all_files = dir(POSITIVE_CHAR_PATCHES_DIR);
 files = all_files(4:size(all_files));
 imgs = zeros(PATCH_SIZE, PATCH_SIZE, size(files, 1));
 
-for j = 1:size(files, 1)
-    img = imread(strcat(POSITIVE_CHAR_PATCHES_DIR, '/', files(j).name), 'jpg');
-    imgs(:, :, j) = img;
+for i = 1:size(files, 1)
+    img = imread(strcat(POSITIVE_CHAR_PATCHES_DIR, '/', files(i).name), 'jpg');
+    imgs(:, :, i) = img;
 end
 
 e = struct('img', imgs);

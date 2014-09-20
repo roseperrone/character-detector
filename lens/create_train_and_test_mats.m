@@ -1,8 +1,8 @@
 %% Loads the jpgs into a struct of matrices that the detector demo uses.
-POSITIVE_CHAR_PATCHES_DIR = 'data/positive-chars-sep-19'
-NEGATIVE_CHAR_PATCHES_DIR = 'data/negative-chars-sep-19'
-TRAIN_CHAR_PATCHES_OUTPUT_FILE = 'data/train_char_patches.mat'
-TEST_CHAR_PATCHES_OUTPUT_FILE = 'data/test_char_patches.mat'
+POSITIVE_CHAR_PATCHES_DIR = 'data/positive-chars-sep-19';
+NEGATIVE_CHAR_PATCHES_DIR = 'data/negative-chars-sep-19';
+TRAIN_CHAR_PATCHES_OUTPUT_FILE = 'data/train_char_patches.mat';
+TEST_CHAR_PATCHES_OUTPUT_FILE = 'data/test_char_patches.mat';
 
 all_positive_files = dir(POSITIVE_CHAR_PATCHES_DIR);
 all_negative_files = dir(NEGATIVE_CHAR_PATCHES_DIR);
