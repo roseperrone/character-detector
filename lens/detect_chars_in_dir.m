@@ -1,4 +1,5 @@
 SRC = '/Users/rose/iodine/lens/data/sep-11-train/';
+ON_PILL_PERCENTAGE = 0.8;
 
 all_files = dir(SRC);
 % Removes the first three files, which are ., .., and .DS_Store
@@ -13,7 +14,8 @@ count = 0;
 
 for i = 1:size(filenames, 2)
     filename = filenames(i);
-    for prediction = detect_chars(strcat(SRC, filename{1}))
+    for prediction = detect_chars(strcat(SRC, filename{1}), ...
+                                  ON_PILL_PERCENTAGE)
         count = count + 1;
         fprintf(f, '%s,%d,%d,%d\n', prediction.filename, prediction.x, ...
             prediction.y, prediction.scale);

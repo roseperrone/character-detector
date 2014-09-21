@@ -1,4 +1,4 @@
-function predictions = detect_char( filename )
+function predictions = detect_char( filename, on_pill_percentage )
 %DETECT_CHAR Detects characters
 %   Returns an array of structs, where each struct has these fields:
 %     filename: the input filename
@@ -30,16 +30,13 @@ for i=1:size(img_sizes, 2)
         for j=1:((t-w)/s + 1)
             x = 1 + (i-1)*s;
             y = 1 + (j-1)*s;
-            disp(strcat(num2str(x), ', ', num2str(x+w-1), ', ', ...
-                        num2str(y), ', ', num2str(y+w-1)))
             patch_mat = img(x:(x+w-1), y:(y+w-1));
             patch = mat2gray(patch_mat, [0 255]);
-            imshow(patch)
-            disp('mmhmmmm')
-            
+            if patch_is_on_pill(patch, on_pill_percentage)
+               disp('classify the patch')
+            end
             % TODO filter the image if it has > 80% pixels that
             % are less than 15.
-            
         end
     end
 end
