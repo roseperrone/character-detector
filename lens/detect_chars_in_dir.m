@@ -1,5 +1,12 @@
-SRC = '/Users/rose/iodine/lens/data/sep-11-train/';
-ON_PILL_PERCENTAGE = 0.8;
+% The following is the training set. The character detector should work
+% well on it.
+SRC = '/Users/rose/iodine/lens/data/july-28-grabcut-rotated/';
+
+%SRC = '/Users/rose/iodine/lens/data/sep-11-train/';
+DST = 'data/predicted_chars.csv';
+
+addpath(genpath('../detectorDemo'));
+addpath(genpath('../finetune'));
 
 all_files = dir(SRC);
 % Removes the first three files, which are ., .., and .DS_Store
@@ -9,15 +16,21 @@ for i = 1:size(files, 1)
    filenames(i) = {files(i).name};
 end
 
-f = fopen('data/predicted_chars.csv', 'a+');
+% Load the neural net
+load('../models/detector_cnn.mat')
+
+filters = struct('w', centroids, 'fx', 8, 'fy', 8, 'fs', 1, 'fch', 1, 'P', P, 'M', M, ...
+     'px', 5, 'py', 5, 'ps', 5, 'poolfunc', @meanpool);
+
+f = fopen(DST, 'a+');
 count = 0;
 
 for i = 1:size(filenames, 2)
     filename = filenames(i);
-    for prediction = detect_chars(strcat(SRC, filename{1}), ...
-                                  ON_PILL_PERCENTAGE)
+    img = imread(strcat(SRC, filename{1}));
+    for prediction = detect_chars(img, params, netconfig, filters)
         count = count + 1;
-        fprintf(f, '%s,%d,%d,%d\n', prediction.filename, prediction.x, ...
+        fprintf(f, '%s,%d,%d,%d\n', filename{1}, prediction.x, ...
             prediction.y, prediction.scale);
     end
 end

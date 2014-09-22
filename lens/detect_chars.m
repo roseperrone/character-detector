@@ -1,4 +1,4 @@
-function predictions = detect_char( filename, on_pill_percentage )
+function predictions = detect_char( img, netparams, netconfig, filters )
 %DETECT_CHAR Detects characters
 %   Returns an array of structs, where each struct has these fields:
 %     filename: the input filename
@@ -16,37 +16,26 @@ function predictions = detect_char( filename, on_pill_percentage )
 %
 % So roughly 6.4k windows are computed. Let's see if this is too slow...
 
-img = rgb2gray(imread(filename));
-img_sizes = [64, 512, 256, 128, 64];
-step_sizes = [16, 16, 8, 8, 8];
+nFilters = size(filters.w, 1);
+batchSize = 500;
 
-w = 32; % the window size
-
-for i=1:size(img_sizes, 2)
-    t = img_sizes(i);
-    s = step_sizes(i);
-    img = imresize(img, [t t]);
-    for i=1:((t-w)/s + 1)
-        for j=1:((t-w)/s + 1)
-            x = 1 + (i-1)*s;
-            y = 1 + (j-1)*s;
-            patch_mat = img(x:(x+w-1), y:(y+w-1));
-            patch = mat2gray(patch_mat, [0 255]);
-            if patch_is_on_pill(patch, on_pill_percentage)
-               disp('classify the patch')
-            end
-            % TODO filter the image if it has > 80% pixels that
-            % are less than 15.
-        end
-    end
-end
-
+[patches, window_info] = get_windowed_patches(rgb2gray(img));
 predictions = [];
 
-predictions = [predictions; struct('filename', 'just/testing', ...
-                                   'x', 3, ...
-                                   'y', 4, ...
-                                   'scale', 1.7203)];
+first_layer_responses = firstLayerFeatures(patches, filters);
+N = size(first_layer_responses, 2);
+X = zeros(5, 5, nFilters, N);
+for i=1:N
+    X(:,:,:,i) = reshape(first_layer_responses(:,i), 5, 5, nFilters);
+end
+pred = svmConvPredict(netparams, netconfig, X, batchSize);
+[~, predicted] = max(pred);
+for i=1:size(predicted, 2)
+    if predicted(i) == 1
+        disp(window_info(i))
+        predictions = [predictions window_info(i)]
+    end
+end
 
 end
 
