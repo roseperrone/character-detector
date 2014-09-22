@@ -12,11 +12,14 @@ Lens-specific notes:
      and NEGATIVE_CHAR_PATCHES_DIR flags wherever they exist in
      `./lens`.
   4. Run create_positive_char_mats.m and create_train_and_test_mats.m.
-  5. In `./trainDetector/train_detecor.m`, set USE_EXISTING_CLUSTERS
+  5. In `./trainDetector/train_detector.m`, set USE_EXISTING_CLUSTERS
      to 0 and set USE_LENS_DATA to 1. Make sure the filenames defined
      at the top of this file are correct. Then run this script. A
      report of train and test accuracy will be printed.
 
+  To run the character detector over pill images, run
+  `./lens/detect_chars_in_dir.m`, and then visualize the predictions
+  with show_detected_char_boxes.py,
 
 ---------------------------------------------------------------------
 
